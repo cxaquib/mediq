@@ -15,6 +15,7 @@ import '../../patient/screens/patient_appointments_screen.dart';
 import '../../patient/screens/download_reports_screen.dart';
 import '../../patient/screens/find_doctors_screen.dart';
 import '../../patient/screens/book_appointment_screen.dart';
+import '../../patient/screens/doctor_details_screen.dart';
 import '../../shared/widgets/patient_shell.dart';
 import '../../lab/screens/test_requests_screen.dart';
 import '../../lab/screens/upload_results_screen.dart';
@@ -116,6 +117,11 @@ class AppRouter {
             path: '/patient/find-doctors',
             name: 'patient-find-doctors',
             builder: (context, state) => const FindDoctorsScreen(),
+          ),
+          GoRoute(
+            path: '/patient/doctor-details',
+            name: 'patient-doctor-details',
+            builder: (context, state) => const DoctorDetailsScreen(),
           ),
           GoRoute(
             path: '/patient/book-appointment',

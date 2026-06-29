@@ -237,7 +237,7 @@ class _FindDoctorsScreenState extends State<FindDoctorsScreen> {
                       final doctor = _filteredDoctors[index];
                       return _DoctorCard(
                         doctor: doctor,
-                        onTap: () => context.push('/patient/book-appointment',
+                        onTap: () => context.push('/patient/doctor-details',
                             extra: doctor),
                       );
                     },
