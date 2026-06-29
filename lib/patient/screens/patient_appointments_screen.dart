@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../../shared/models/appointment.dart';
+import '../../shared/providers/booked_doctors_provider.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../shared/widgets/custom_button.dart';
 
@@ -20,40 +23,6 @@ class PatientAppointmentsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
-    final upcoming = [
-      {
-        'doctor': 'Dr. Sarah Johnson',
-        'specialty': 'Cardiologist',
-        'date': DateTime.now().add(const Duration(days: 2)),
-        'time': '10:00 AM',
-        'type': 'Video Consultation'
-      },
-      {
-        'doctor': 'Dr. Michael Chen',
-        'specialty': 'Dermatologist',
-        'date': DateTime.now().add(const Duration(days: 5)),
-        'time': '2:30 PM',
-        'type': 'In-Person'
-      },
-    ];
-    final past = [
-      {
-        'doctor': 'Dr. Emily Davis',
-        'specialty': 'General Physician',
-        'date': DateTime.now().subtract(const Duration(days: 10)),
-        'time': '9:00 AM',
-        'type': 'Completed'
-      },
-      {
-        'doctor': 'Dr. Robert Wilson',
-        'specialty': 'Orthopedic',
-        'date': DateTime.now().subtract(const Duration(days: 30)),
-        'time': '11:00 AM',
-        'type': 'Completed'
-      },
-    ];
-
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -62,48 +31,43 @@ class PatientAppointmentsScreen extends StatelessWidget {
           bottom:
               const TabBar(tabs: [Tab(text: 'Upcoming'), Tab(text: 'Past')]),
         ),
-        body: TabBarView(
-          children: [
-            ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: upcoming.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final appt = upcoming[index];
-                final apptDateTime = _parseDateTime(
-                    appt['date'] as DateTime, appt['time'] as String);
-                final isPassed = apptDateTime.isBefore(now);
-                return _AppointmentCard(
-                  doctor: appt['doctor'] as String,
-                  specialty: appt['specialty'] as String,
-                  date: appt['date'] as DateTime,
-                  time: appt['time'] as String,
-                  type: appt['type'] as String,
-                  isUpcoming: true,
-                  isPassed: isPassed,
-                  onCancel: () => _showCancelDialog(context),
-                  onReschedule: () {},
-                );
-              },
-            ),
-            ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: past.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final appt = past[index];
-                return _AppointmentCard(
-                  doctor: appt['doctor'] as String,
-                  specialty: appt['specialty'] as String,
-                  date: appt['date'] as DateTime,
-                  time: appt['time'] as String,
-                  type: appt['type'] as String,
-                  isUpcoming: false,
-                  onViewReport: () {},
-                );
-              },
-            ),
-          ],
+        body: Consumer<BookedDoctorsProvider>(
+          builder: (context, booked, _) {
+            final now = DateTime.now();
+            final allAppts = booked.appointments;
+            final upcoming = allAppts
+                .where((a) => _parseDateTime(a.date, a.time).isAfter(now))
+                .toList();
+            final past = allAppts
+                .where((a) => _parseDateTime(a.date, a.time).isBefore(now))
+                .toList();
+
+            if (allAppts.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.calendar_today,
+                        size: 64,
+                        color: AppTheme.textSecondary.withValues(alpha: 0.4)),
+                    const SizedBox(height: 16),
+                    Text('No appointments yet',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(color: AppTheme.textSecondary)),
+                  ],
+                ),
+              );
+            }
+
+            return TabBarView(
+              children: [
+                _buildList(context, upcoming, true, booked),
+                _buildList(context, past, false, booked),
+              ],
+            );
+          },
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => context.push('/patient/find-doctors'),
@@ -113,7 +77,44 @@ class PatientAppointmentsScreen extends StatelessWidget {
     );
   }
 
-  void _showCancelDialog(BuildContext context) {
+  Widget _buildList(BuildContext context, List<Appointment> appointments,
+      bool isUpcoming, BookedDoctorsProvider booked) {
+    if (appointments.isEmpty) {
+      return Center(
+        child: Text(
+            isUpcoming ? 'No upcoming appointments' : 'No past appointments',
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: AppTheme.textSecondary)),
+      );
+    }
+    return ListView.separated(
+      padding: const EdgeInsets.all(16),
+      itemCount: appointments.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      itemBuilder: (context, index) {
+        final appt = appointments[index];
+        final apptDateTime = _parseDateTime(appt.date, appt.time);
+        final isPassed = apptDateTime.isBefore(DateTime.now());
+        return _AppointmentCard(
+          doctor: appt.doctorName,
+          specialty: appt.specialty,
+          date: appt.date,
+          time: appt.time,
+          type: appt.type,
+          isUpcoming: isUpcoming,
+          isPassed: isPassed && isUpcoming,
+          onCancel: isUpcoming && !isPassed
+              ? () => _showCancelDialog(context, appt.doctorName, booked)
+              : null,
+        );
+      },
+    );
+  }
+
+  void _showCancelDialog(
+      BuildContext context, String doctorName, BookedDoctorsProvider booked) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -154,8 +155,6 @@ class _AppointmentCard extends StatelessWidget {
   final bool isUpcoming;
   final bool isPassed;
   final VoidCallback? onCancel;
-  final VoidCallback? onReschedule;
-  final VoidCallback? onViewReport;
 
   const _AppointmentCard({
     required this.doctor,
@@ -166,8 +165,6 @@ class _AppointmentCard extends StatelessWidget {
     required this.isUpcoming,
     this.isPassed = false,
     this.onCancel,
-    this.onReschedule,
-    this.onViewReport,
   });
 
   @override
@@ -243,8 +240,7 @@ class _AppointmentCard extends StatelessWidget {
                           onPressed: onCancel)),
                   const SizedBox(width: 12),
                   Expanded(
-                      child: CustomButton(
-                          text: 'Reschedule', onPressed: onReschedule)),
+                      child: CustomButton(text: 'Reschedule', onPressed: null)),
                 ],
               ),
             ] else if (isUpcoming && isPassed) ...[
@@ -256,11 +252,11 @@ class _AppointmentCard extends StatelessWidget {
                   width: double.infinity),
             ] else ...[
               const SizedBox(height: 16),
-              CustomButton(
-                  text: 'View Report',
-                  isOutlined: true,
-                  onPressed: onViewReport,
-                  width: 150),
+              Text('Completed',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(color: AppTheme.successColor)),
             ],
           ],
         ),
