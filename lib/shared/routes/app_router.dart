@@ -16,6 +16,7 @@ import '../../patient/screens/patient_appointments_screen.dart';
 import '../../patient/screens/download_reports_screen.dart';
 import '../../patient/screens/find_doctors_screen.dart';
 import '../../patient/screens/book_appointment_screen.dart';
+import '../../shared/widgets/patient_shell.dart';
 import '../../lab/screens/test_requests_screen.dart';
 import '../../lab/screens/upload_results_screen.dart';
 import '../../lab/screens/status_tracking_screen.dart';
@@ -88,36 +89,41 @@ class AppRouter {
         builder: (context, state) => const DoctorViewHistoryScreen(),
       ),
 
-      // Patient Routes
-      GoRoute(
-        path: '/patient/profile',
-        name: 'patient-profile',
-        builder: (context, state) => const PatientProfileScreen(),
-      ),
-      GoRoute(
-        path: '/patient/reports',
-        name: 'patient-reports',
-        builder: (context, state) => const PatientReportsScreen(),
-      ),
-      GoRoute(
-        path: '/patient/appointments',
-        name: 'patient-appointments',
-        builder: (context, state) => const PatientAppointmentsScreen(),
-      ),
-      GoRoute(
-        path: '/patient/download-reports',
-        name: 'patient-download-reports',
-        builder: (context, state) => const DownloadReportsScreen(),
-      ),
-      GoRoute(
-        path: '/patient/find-doctors',
-        name: 'patient-find-doctors',
-        builder: (context, state) => const FindDoctorsScreen(),
-      ),
-      GoRoute(
-        path: '/patient/book-appointment',
-        name: 'patient-book-appointment',
-        builder: (context, state) => const BookAppointmentScreen(),
+      // Patient Routes (with BottomNavBar shell)
+      ShellRoute(
+        builder: (context, state, child) => PatientShell(child: child),
+        routes: [
+          GoRoute(
+            path: '/patient/profile',
+            name: 'patient-profile',
+            builder: (context, state) => const PatientProfileScreen(),
+          ),
+          GoRoute(
+            path: '/patient/reports',
+            name: 'patient-reports',
+            builder: (context, state) => const PatientReportsScreen(),
+          ),
+          GoRoute(
+            path: '/patient/appointments',
+            name: 'patient-appointments',
+            builder: (context, state) => const PatientAppointmentsScreen(),
+          ),
+          GoRoute(
+            path: '/patient/download-reports',
+            name: 'patient-download-reports',
+            builder: (context, state) => const DownloadReportsScreen(),
+          ),
+          GoRoute(
+            path: '/patient/find-doctors',
+            name: 'patient-find-doctors',
+            builder: (context, state) => const FindDoctorsScreen(),
+          ),
+          GoRoute(
+            path: '/patient/book-appointment',
+            name: 'patient-book-appointment',
+            builder: (context, state) => const BookAppointmentScreen(),
+          ),
+        ],
       ),
 
       // Lab Routes

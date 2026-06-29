@@ -52,7 +52,9 @@ static void my_application_activate(GApplication* application) {
     gtk_window_set_title(window, "mediq");
   }
 
-  gtk_window_set_default_size(window, 1280, 720);
+  gtk_window_set_default_size(window, 412, 915);
+  gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
+  gtk_window_set_gravity(window, GDK_GRAVITY_CENTER);
 
   g_autoptr(FlDartProject) project = fl_dart_project_new();
   fl_dart_project_set_dart_entrypoint_arguments(
