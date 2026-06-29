@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import '../../shared/providers/booked_doctors_provider.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../shared/widgets/custom_button.dart';
 
@@ -121,13 +123,20 @@ class DoctorDetailsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: CustomButton(
-                text: 'Book Appointment',
-                onPressed: () =>
-                    context.push('/patient/book-appointment', extra: doctor),
-              ),
+            Consumer<BookedDoctorsProvider>(
+              builder: (context, booked, _) {
+                final alreadyBooked = booked.isBooked(doctor['name']!);
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: CustomButton(
+                    text: alreadyBooked ? 'Already Booked' : 'Book Appointment',
+                    onPressed: alreadyBooked
+                        ? null
+                        : () => context.push('/patient/book-appointment',
+                            extra: doctor),
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 24),
             Padding(

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'shared/providers/auth_provider.dart';
 import 'shared/providers/user_provider.dart';
+import 'shared/providers/booked_doctors_provider.dart';
 import 'shared/routes/app_router.dart';
 import 'shared/theme/app_theme.dart';
 import 'shared/services/storage_service.dart';
@@ -17,6 +18,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider(storageService)),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => BookedDoctorsProvider()),
       ],
       child: const MediQApp(),
     ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../../shared/providers/booked_doctors_provider.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../shared/widgets/custom_button.dart';
 
@@ -295,6 +297,9 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                 text: 'Confirm Booking',
                 onPressed: () async {
                   setState(() => _isBooking = true);
+                  context
+                      .read<BookedDoctorsProvider>()
+                      .bookDoctor(doctor['name']!);
                   await Future.delayed(const Duration(seconds: 2));
                   if (context.mounted) context.pop();
                 },
