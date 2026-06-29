@@ -17,6 +17,7 @@ import '../../patient/screens/find_doctors_screen.dart';
 import '../../patient/screens/book_appointment_screen.dart';
 import '../../patient/screens/doctor_details_screen.dart';
 import '../../shared/widgets/patient_shell.dart';
+import '../../shared/widgets/doctor_shell.dart';
 import '../../lab/screens/test_requests_screen.dart';
 import '../../lab/screens/upload_results_screen.dart';
 import '../../lab/screens/status_tracking_screen.dart';
@@ -62,31 +63,36 @@ class AppRouter {
         builder: (context, state) => const RoleSelectionScreen(),
       ),
 
-      // Doctor Routes
-      GoRoute(
-        path: '/doctor/dashboard',
-        name: 'doctor-dashboard',
-        builder: (context, state) => const DoctorDashboardScreen(),
-      ),
-      GoRoute(
-        path: '/doctor/patients',
-        name: 'doctor-patients',
-        builder: (context, state) => const DoctorPatientsScreen(),
-      ),
-      GoRoute(
-        path: '/doctor/appointments',
-        name: 'doctor-appointments',
-        builder: (context, state) => const DoctorAppointmentsScreen(),
-      ),
-      GoRoute(
-        path: '/doctor/upload-reports',
-        name: 'doctor-upload-reports',
-        builder: (context, state) => const DoctorUploadReportsScreen(),
-      ),
-      GoRoute(
-        path: '/doctor/view-history',
-        name: 'doctor-view-history',
-        builder: (context, state) => const DoctorViewHistoryScreen(),
+      // Doctor Routes (with BottomNavBar shell)
+      ShellRoute(
+        builder: (context, state, child) => DoctorShell(child: child),
+        routes: [
+          GoRoute(
+            path: '/doctor/dashboard',
+            name: 'doctor-dashboard',
+            builder: (context, state) => const DoctorDashboardScreen(),
+          ),
+          GoRoute(
+            path: '/doctor/patients',
+            name: 'doctor-patients',
+            builder: (context, state) => const DoctorPatientsScreen(),
+          ),
+          GoRoute(
+            path: '/doctor/appointments',
+            name: 'doctor-appointments',
+            builder: (context, state) => const DoctorAppointmentsScreen(),
+          ),
+          GoRoute(
+            path: '/doctor/upload-reports',
+            name: 'doctor-upload-reports',
+            builder: (context, state) => const DoctorUploadReportsScreen(),
+          ),
+          GoRoute(
+            path: '/doctor/view-history',
+            name: 'doctor-view-history',
+            builder: (context, state) => const DoctorViewHistoryScreen(),
+          ),
+        ],
       ),
 
       // Patient Routes (with BottomNavBar shell)
