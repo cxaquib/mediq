@@ -40,8 +40,8 @@ class CustomTextField extends StatelessWidget {
         Text(
           label,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+                fontWeight: FontWeight.w600,
+              ),
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -59,25 +59,14 @@ class CustomTextField extends StatelessWidget {
             prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
             suffixIcon: suffixIcon,
             filled: true,
-            fillColor: Colors.grey[50],
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[300]!),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[300]!),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF006D77), width: 2),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFFE29578), width: 2),
-            ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            hintStyle: TextStyle(color: Colors.grey[500]),
+            fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+            border: Theme.of(context).inputDecorationTheme.border,
+            enabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder,
+            focusedBorder: Theme.of(context).inputDecorationTheme.focusedBorder,
+            errorBorder: Theme.of(context).inputDecorationTheme.errorBorder,
+            contentPadding:
+                Theme.of(context).inputDecorationTheme.contentPadding,
+            hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
           ),
         ),
       ],

@@ -14,6 +14,8 @@ import '../../patient/screens/patient_profile_screen.dart';
 import '../../patient/screens/reports_screen.dart';
 import '../../patient/screens/patient_appointments_screen.dart';
 import '../../patient/screens/download_reports_screen.dart';
+import '../../patient/screens/find_doctors_screen.dart';
+import '../../patient/screens/book_appointment_screen.dart';
 import '../../lab/screens/test_requests_screen.dart';
 import '../../lab/screens/upload_results_screen.dart';
 import '../../lab/screens/status_tracking_screen.dart';
@@ -28,11 +30,13 @@ class AppRouter {
       final auth = context.read<AuthProvider>();
       final isLoggedIn = auth.isAuthenticated;
       final isAuthRoute = state.matchedLocation.startsWith('/auth');
-      
+
       if (!isLoggedIn && !isAuthRoute) {
         return '/auth/login';
       }
-      if (isLoggedIn && isAuthRoute && state.matchedLocation != '/auth/role-selection') {
+      if (isLoggedIn &&
+          isAuthRoute &&
+          state.matchedLocation != '/auth/role-selection') {
         if (auth.role == UserRole.patient) return '/patient/profile';
         if (auth.role == UserRole.doctor) return '/doctor/dashboard';
         if (auth.role == UserRole.admin) return '/lab/test-requests';
@@ -56,7 +60,7 @@ class AppRouter {
         name: 'role-selection',
         builder: (context, state) => const RoleSelectionScreen(),
       ),
-      
+
       // Doctor Routes
       GoRoute(
         path: '/doctor/dashboard',
@@ -83,7 +87,7 @@ class AppRouter {
         name: 'doctor-view-history',
         builder: (context, state) => const DoctorViewHistoryScreen(),
       ),
-      
+
       // Patient Routes
       GoRoute(
         path: '/patient/profile',
@@ -105,7 +109,17 @@ class AppRouter {
         name: 'patient-download-reports',
         builder: (context, state) => const DownloadReportsScreen(),
       ),
-      
+      GoRoute(
+        path: '/patient/find-doctors',
+        name: 'patient-find-doctors',
+        builder: (context, state) => const FindDoctorsScreen(),
+      ),
+      GoRoute(
+        path: '/patient/book-appointment',
+        name: 'patient-book-appointment',
+        builder: (context, state) => const BookAppointmentScreen(),
+      ),
+
       // Lab Routes
       GoRoute(
         path: '/lab/test-requests',
@@ -122,7 +136,7 @@ class AppRouter {
         name: 'lab-status-tracking',
         builder: (context, state) => const LabStatusTrackingScreen(),
       ),
-      
+
       // Common Routes
       GoRoute(
         path: '/common/notifications',

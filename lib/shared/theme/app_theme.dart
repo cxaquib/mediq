@@ -114,21 +114,36 @@ class AppTheme {
       shape: CircleBorder(),
     ),
     textTheme: const TextTheme(
-      displayLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: textPrimary),
-      displayMedium: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: textPrimary),
-      displaySmall: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: textPrimary),
-      headlineLarge: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: textPrimary),
-      headlineMedium: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: textPrimary),
-      headlineSmall: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: textPrimary),
-      titleLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: textPrimary),
-      titleMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: textPrimary),
-      titleSmall: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: textSecondary),
-      bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: textPrimary),
-      bodyMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: textPrimary),
-      bodySmall: TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: textSecondary),
-      labelLarge: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
-      labelMedium: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: textSecondary),
-      labelSmall: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: textSecondary),
+      displayLarge: TextStyle(
+          fontSize: 32, fontWeight: FontWeight.bold, color: textPrimary),
+      displayMedium: TextStyle(
+          fontSize: 28, fontWeight: FontWeight.bold, color: textPrimary),
+      displaySmall: TextStyle(
+          fontSize: 24, fontWeight: FontWeight.bold, color: textPrimary),
+      headlineLarge: TextStyle(
+          fontSize: 22, fontWeight: FontWeight.w600, color: textPrimary),
+      headlineMedium: TextStyle(
+          fontSize: 20, fontWeight: FontWeight.w600, color: textPrimary),
+      headlineSmall: TextStyle(
+          fontSize: 18, fontWeight: FontWeight.w600, color: textPrimary),
+      titleLarge: TextStyle(
+          fontSize: 16, fontWeight: FontWeight.w600, color: textPrimary),
+      titleMedium: TextStyle(
+          fontSize: 14, fontWeight: FontWeight.w500, color: textPrimary),
+      titleSmall: TextStyle(
+          fontSize: 12, fontWeight: FontWeight.w500, color: textSecondary),
+      bodyLarge: TextStyle(
+          fontSize: 16, fontWeight: FontWeight.normal, color: textPrimary),
+      bodyMedium: TextStyle(
+          fontSize: 14, fontWeight: FontWeight.normal, color: textPrimary),
+      bodySmall: TextStyle(
+          fontSize: 12, fontWeight: FontWeight.normal, color: textSecondary),
+      labelLarge: TextStyle(
+          fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
+      labelMedium: TextStyle(
+          fontSize: 12, fontWeight: FontWeight.w500, color: textSecondary),
+      labelSmall: TextStyle(
+          fontSize: 10, fontWeight: FontWeight.w500, color: textSecondary),
     ),
   );
 
@@ -173,6 +188,8 @@ class AppTheme {
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: secondaryColor, width: 2),
       ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      hintStyle: TextStyle(color: Colors.grey[500]),
     ),
   );
 }

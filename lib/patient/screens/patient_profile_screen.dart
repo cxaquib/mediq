@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../shared/providers/auth_provider.dart';
 import '../../shared/providers/user_provider.dart';
@@ -24,53 +25,142 @@ class PatientProfileScreen extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 50,
-                        backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
+                        backgroundColor:
+                            AppTheme.primaryColor.withValues(alpha: 0.1),
                         child: Text(
-                          user.name?.isNotEmpty == true ? user.name![0].toUpperCase() : 'J',
-                          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: AppTheme.primaryColor),
+                          user.name?.isNotEmpty == true
+                              ? user.name![0].toUpperCase()
+                              : 'J',
+                          style: TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.primaryColor),
                         ),
                       ),
                       const SizedBox(height: 16),
-                      Text(user.name ?? 'John Doe', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
-                      Text(user.email ?? 'john@example.com', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textSecondary)),
+                      Text(user.name ?? 'John Doe',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(fontWeight: FontWeight.bold)),
+                      Text(user.email ?? 'john@example.com',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(color: AppTheme.textSecondary)),
                       const SizedBox(height: 16),
-                      CustomButton(text: 'Edit Profile', isOutlined: true, onPressed: () {}, width: 180),
+                      CustomButton(
+                          text: 'Edit Profile',
+                          isOutlined: true,
+                          onPressed: () {},
+                          width: 180),
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 24),
+              Card(
+                color: AppTheme.primaryColor,
+                child: InkWell(
+                  onTap: () => context.push('/patient/find-doctors'),
+                  borderRadius: BorderRadius.circular(16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(Icons.search,
+                              color: Colors.white, size: 28),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Find a Doctor',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold)),
+                              const SizedBox(height: 4),
+                              Text('Search by specialty, name, or hospital',
+                                  style: TextStyle(
+                                      color: Colors.white70, fontSize: 13)),
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.arrow_forward_ios,
+                            color: Colors.white.withValues(alpha: 0.7),
+                            size: 18),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
               _InfoCard(
                 title: 'Personal Information',
                 children: [
-                  _InfoRow(label: 'Phone', value: user.phone ?? '+1 234 567 890', icon: Icons.phone),
-                  _InfoRow(label: 'Date of Birth', value: 'January 1, 1990', icon: Icons.cake),
+                  _InfoRow(
+                      label: 'Phone',
+                      value: user.phone ?? '+1 234 567 890',
+                      icon: Icons.phone),
+                  _InfoRow(
+                      label: 'Date of Birth',
+                      value: 'January 1, 1990',
+                      icon: Icons.cake),
                   _InfoRow(label: 'Gender', value: 'Male', icon: Icons.person),
-                  _InfoRow(label: 'Blood Group', value: 'O+', icon: Icons.bloodtype),
+                  _InfoRow(
+                      label: 'Blood Group', value: 'O+', icon: Icons.bloodtype),
                 ],
               ),
               const SizedBox(height: 16),
               _InfoCard(
                 title: 'Address',
                 children: [
-                  _InfoRow(label: 'Address', value: '123 Main Street, City, State 12345', icon: Icons.location_on),
-                  _InfoRow(label: 'Emergency Contact', value: '+1 987 654 321', icon: Icons.emergency),
+                  _InfoRow(
+                      label: 'Address',
+                      value: '123 Main Street, City, State 12345',
+                      icon: Icons.location_on),
+                  _InfoRow(
+                      label: 'Emergency Contact',
+                      value: '+1 987 654 321',
+                      icon: Icons.emergency),
                 ],
               ),
               const SizedBox(height: 16),
               _InfoCard(
                 title: 'Medical Information',
                 children: [
-                  _InfoRow(label: 'Allergies', value: 'Penicillin, Peanuts', icon: Icons.warning),
-                  _InfoRow(label: 'Chronic Conditions', value: 'Hypertension', icon: Icons.medical_services),
-                  _InfoRow(label: 'Current Medications', value: 'Lisinopril 10mg daily', icon: Icons.medication),
+                  _InfoRow(
+                      label: 'Allergies',
+                      value: 'Penicillin, Peanuts',
+                      icon: Icons.warning),
+                  _InfoRow(
+                      label: 'Chronic Conditions',
+                      value: 'Hypertension',
+                      icon: Icons.medical_services),
+                  _InfoRow(
+                      label: 'Current Medications',
+                      value: 'Lisinopril 10mg daily',
+                      icon: Icons.medication),
                 ],
               ),
               const SizedBox(height: 24),
               CustomButton(
                 text: 'Logout',
                 isOutlined: true,
-                onPressed: () => context.read<AuthProvider>().logout(),
+                onPressed: () async {
+                  await context.read<AuthProvider>().logout();
+                  if (context.mounted) context.go('/auth/login');
+                },
               ),
             ],
           ),
@@ -94,7 +184,11 @@ class _InfoCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+            Text(title,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             ...children,
           ],
@@ -109,7 +203,8 @@ class _InfoRow extends StatelessWidget {
   final String value;
   final IconData icon;
 
-  const _InfoRow({required this.label, required this.value, required this.icon});
+  const _InfoRow(
+      {required this.label, required this.value, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +217,11 @@ class _InfoRow extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondary)),
+              Text(label,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(color: AppTheme.textSecondary)),
               Text(value, style: Theme.of(context).textTheme.bodyMedium),
             ],
           ),

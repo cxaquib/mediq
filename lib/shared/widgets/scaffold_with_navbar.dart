@@ -31,24 +31,33 @@ class ScaffoldWithNavBar extends StatelessWidget {
     switch (role) {
       case 'doctor':
         return const [
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.dashboard), label: 'Dashboard'),
           BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Patients'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Appointments'),
-          BottomNavigationBarItem(icon: Icon(Icons.upload_file), label: 'Upload Reports'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today), label: 'Appointments'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.upload_file), label: 'Upload Reports'),
           BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
         ];
       case 'patient':
         return const [
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          BottomNavigationBarItem(icon: Icon(Icons.description), label: 'Reports'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Appointments'),
-          BottomNavigationBarItem(icon: Icon(Icons.download), label: 'Download'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.search), label: 'Find Doctors'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today), label: 'Appointments'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.description), label: 'Reports'),
         ];
       case 'lab':
         return const [
-          BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Test Requests'),
-          BottomNavigationBarItem(icon: Icon(Icons.upload), label: 'Upload Results'),
-          BottomNavigationBarItem(icon: Icon(Icons.track_changes), label: 'Status'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.assignment), label: 'Test Requests'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.upload), label: 'Upload Results'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.track_changes), label: 'Status'),
         ];
       default:
         return const [];

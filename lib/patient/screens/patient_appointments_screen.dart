@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../shared/theme/app_theme.dart';
 import '../../shared/widgets/custom_button.dart';
@@ -9,12 +10,36 @@ class PatientAppointmentsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final upcoming = [
-      {'doctor': 'Dr. Sarah Johnson', 'specialty': 'Cardiologist', 'date': DateTime.now().add(const Duration(days: 2)), 'time': '10:00 AM', 'type': 'Video Consultation'},
-      {'doctor': 'Dr. Michael Chen', 'specialty': 'Dermatologist', 'date': DateTime.now().add(const Duration(days: 5)), 'time': '2:30 PM', 'type': 'In-Person'},
+      {
+        'doctor': 'Dr. Sarah Johnson',
+        'specialty': 'Cardiologist',
+        'date': DateTime.now().add(const Duration(days: 2)),
+        'time': '10:00 AM',
+        'type': 'Video Consultation'
+      },
+      {
+        'doctor': 'Dr. Michael Chen',
+        'specialty': 'Dermatologist',
+        'date': DateTime.now().add(const Duration(days: 5)),
+        'time': '2:30 PM',
+        'type': 'In-Person'
+      },
     ];
     final past = [
-      {'doctor': 'Dr. Emily Davis', 'specialty': 'General Physician', 'date': DateTime.now().subtract(const Duration(days: 10)), 'time': '9:00 AM', 'type': 'Completed'},
-      {'doctor': 'Dr. Robert Wilson', 'specialty': 'Orthopedic', 'date': DateTime.now().subtract(const Duration(days: 30)), 'time': '11:00 AM', 'type': 'Completed'},
+      {
+        'doctor': 'Dr. Emily Davis',
+        'specialty': 'General Physician',
+        'date': DateTime.now().subtract(const Duration(days: 10)),
+        'time': '9:00 AM',
+        'type': 'Completed'
+      },
+      {
+        'doctor': 'Dr. Robert Wilson',
+        'specialty': 'Orthopedic',
+        'date': DateTime.now().subtract(const Duration(days: 30)),
+        'time': '11:00 AM',
+        'type': 'Completed'
+      },
     ];
 
     return DefaultTabController(
@@ -22,7 +47,8 @@ class PatientAppointmentsScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Appointments'),
-          bottom: const TabBar(tabs: [Tab(text: 'Upcoming'), Tab(text: 'Past')]),
+          bottom:
+              const TabBar(tabs: [Tab(text: 'Upcoming'), Tab(text: 'Past')]),
         ),
         body: TabBarView(
           children: [
@@ -64,7 +90,7 @@ class PatientAppointmentsScreen extends StatelessWidget {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () => context.push('/patient/find-doctors'),
           child: const Icon(Icons.add),
         ),
       ),
@@ -108,15 +134,26 @@ class _AppointmentCard extends StatelessWidget {
                 CircleAvatar(
                   radius: 24,
                   backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
-                  child: Text(doctor.split(' ').last[0], style: TextStyle(color: AppTheme.primaryColor, fontWeight: FontWeight.bold)),
+                  child: Text(doctor.split(' ').last[0],
+                      style: TextStyle(
+                          color: AppTheme.primaryColor,
+                          fontWeight: FontWeight.bold)),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(doctor, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
-                      Text(specialty, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondary)),
+                      Text(doctor,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w600)),
+                      Text(specialty,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: AppTheme.textSecondary)),
                     ],
                   ),
                 ),
@@ -130,11 +167,14 @@ class _AppointmentCard extends StatelessWidget {
             const SizedBox(height: 16),
             Row(
               children: [
-                Icon(Icons.calendar_today, size: 16, color: AppTheme.textSecondary),
+                Icon(Icons.calendar_today,
+                    size: 16, color: AppTheme.textSecondary),
                 const SizedBox(width: 8),
-                Text(DateFormat('EEEE, MMM d, yyyy').format(date), style: Theme.of(context).textTheme.bodyMedium),
+                Text(DateFormat('EEEE, MMM d, yyyy').format(date),
+                    style: Theme.of(context).textTheme.bodyMedium),
                 const SizedBox(width: 24),
-                Icon(Icons.access_time, size: 16, color: AppTheme.textSecondary),
+                Icon(Icons.access_time,
+                    size: 16, color: AppTheme.textSecondary),
                 const SizedBox(width: 8),
                 Text(time, style: Theme.of(context).textTheme.bodyMedium),
               ],
@@ -143,14 +183,24 @@ class _AppointmentCard extends StatelessWidget {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Expanded(child: CustomButton(text: 'Cancel', isOutlined: true, onPressed: onCancel)),
+                  Expanded(
+                      child: CustomButton(
+                          text: 'Cancel',
+                          isOutlined: true,
+                          onPressed: onCancel)),
                   const SizedBox(width: 12),
-                  Expanded(child: CustomButton(text: 'Reschedule', onPressed: onReschedule)),
+                  Expanded(
+                      child: CustomButton(
+                          text: 'Reschedule', onPressed: onReschedule)),
                 ],
               ),
             ] else ...[
               const SizedBox(height: 16),
-              CustomButton(text: 'View Report', isOutlined: true, onPressed: onViewReport, width: 150),
+              CustomButton(
+                  text: 'View Report',
+                  isOutlined: true,
+                  onPressed: onViewReport,
+                  width: 150),
             ],
           ],
         ),
