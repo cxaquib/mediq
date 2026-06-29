@@ -49,8 +49,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final doctor =
-        ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
+    final doctor = GoRouterState.of(context).extra as Map<String, String>?;
 
     if (doctor == null) {
       return Scaffold(
