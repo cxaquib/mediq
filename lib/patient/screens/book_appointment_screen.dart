@@ -255,25 +255,50 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
               ),
             ),
             const SizedBox(height: 32),
-            CustomButton(
-              text: 'Confirm Booking',
-              isLoading: _isBooking,
-              onPressed: _isBooking
-                  ? null
-                  : () async {
-                      setState(() => _isBooking = true);
-                      await Future.delayed(const Duration(seconds: 1));
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Appointment booked successfully!'),
-                            backgroundColor: AppTheme.successColor,
-                          ),
-                        );
-                        context.pop();
-                      }
-                    },
-            ),
+            if (_isBooking)
+              Card(
+                color: AppTheme.successColor.withValues(alpha: 0.1),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Icon(Icons.check_circle,
+                          color: AppTheme.successColor, size: 28),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Appointment Booked!',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: AppTheme.successColor)),
+                            Text('Redirecting to appointments...',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                        color: AppTheme.successColor
+                                            .withValues(alpha: 0.8))),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else
+              CustomButton(
+                text: 'Confirm Booking',
+                onPressed: () async {
+                  setState(() => _isBooking = true);
+                  await Future.delayed(const Duration(seconds: 2));
+                  if (context.mounted) context.pop();
+                },
+              ),
             const SizedBox(height: 16),
           ],
         ),

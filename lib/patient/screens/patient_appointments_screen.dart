@@ -7,8 +7,20 @@ import '../../shared/widgets/custom_button.dart';
 class PatientAppointmentsScreen extends StatelessWidget {
   const PatientAppointmentsScreen({super.key});
 
+  DateTime _parseDateTime(DateTime date, String time) {
+    final parts = time.split(' ');
+    final timeParts = parts[0].split(':');
+    var hour = int.parse(timeParts[0]);
+    final minute = int.parse(timeParts[1]);
+    final amPm = parts[1];
+    if (amPm == 'PM' && hour != 12) hour += 12;
+    if (amPm == 'AM' && hour == 12) hour = 0;
+    return DateTime(date.year, date.month, date.day, hour, minute);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
     final upcoming = [
       {
         'doctor': 'Dr. Sarah Johnson',
@@ -58,6 +70,9 @@ class PatientAppointmentsScreen extends StatelessWidget {
               separatorBuilder: (_, __) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final appt = upcoming[index];
+                final apptDateTime = _parseDateTime(
+                    appt['date'] as DateTime, appt['time'] as String);
+                final isPassed = apptDateTime.isBefore(now);
                 return _AppointmentCard(
                   doctor: appt['doctor'] as String,
                   specialty: appt['specialty'] as String,
@@ -65,7 +80,8 @@ class PatientAppointmentsScreen extends StatelessWidget {
                   time: appt['time'] as String,
                   type: appt['type'] as String,
                   isUpcoming: true,
-                  onCancel: () {},
+                  isPassed: isPassed,
+                  onCancel: () => _showCancelDialog(context),
                   onReschedule: () {},
                 );
               },
@@ -96,6 +112,37 @@ class PatientAppointmentsScreen extends StatelessWidget {
       ),
     );
   }
+
+  void _showCancelDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Cancel Appointment'),
+        content:
+            const Text('Are you sure you want to cancel this appointment?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text('Keep Appointment',
+                style: TextStyle(color: AppTheme.primaryColor)),
+          ),
+          CustomButton(
+            text: 'Yes, Cancel',
+            onPressed: () {
+              Navigator.pop(ctx);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Appointment cancelled successfully'),
+                  backgroundColor: AppTheme.successColor,
+                ),
+              );
+            },
+            width: 130,
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _AppointmentCard extends StatelessWidget {
@@ -105,6 +152,7 @@ class _AppointmentCard extends StatelessWidget {
   final String time;
   final String type;
   final bool isUpcoming;
+  final bool isPassed;
   final VoidCallback? onCancel;
   final VoidCallback? onReschedule;
   final VoidCallback? onViewReport;
@@ -116,6 +164,7 @@ class _AppointmentCard extends StatelessWidget {
     required this.time,
     required this.type,
     required this.isUpcoming,
+    this.isPassed = false,
     this.onCancel,
     this.onReschedule,
     this.onViewReport,
@@ -158,9 +207,13 @@ class _AppointmentCard extends StatelessWidget {
                   ),
                 ),
                 Chip(
-                  label: Text(type, style: const TextStyle(fontSize: 11)),
-                  backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
-                  labelStyle: TextStyle(color: AppTheme.primaryColor),
+                  label: Text(isPassed ? 'Missed' : type,
+                      style: const TextStyle(fontSize: 11)),
+                  backgroundColor: isPassed
+                      ? Colors.red.withValues(alpha: 0.1)
+                      : AppTheme.primaryColor.withValues(alpha: 0.1),
+                  labelStyle: TextStyle(
+                      color: isPassed ? Colors.red : AppTheme.primaryColor),
                 ),
               ],
             ),
@@ -179,7 +232,7 @@ class _AppointmentCard extends StatelessWidget {
                 Text(time, style: Theme.of(context).textTheme.bodyMedium),
               ],
             ),
-            if (isUpcoming) ...[
+            if (isUpcoming && !isPassed) ...[
               const SizedBox(height: 16),
               Row(
                 children: [
@@ -194,6 +247,13 @@ class _AppointmentCard extends StatelessWidget {
                           text: 'Reschedule', onPressed: onReschedule)),
                 ],
               ),
+            ] else if (isUpcoming && isPassed) ...[
+              const SizedBox(height: 16),
+              CustomButton(
+                  text: 'Appointment Missed',
+                  isOutlined: true,
+                  onPressed: null,
+                  width: double.infinity),
             ] else ...[
               const SizedBox(height: 16),
               CustomButton(
