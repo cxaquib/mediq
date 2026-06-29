@@ -133,7 +133,6 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                   final isSelected = _selectedDate.day == date.day &&
                       _selectedDate.month == date.month &&
                       _selectedDate.year == date.year;
-                  final isToday = index == 0;
                   return Padding(
                     padding: const EdgeInsets.only(right: 12),
                     child: GestureDetector(
